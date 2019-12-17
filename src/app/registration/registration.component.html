@@ -1,0 +1,74 @@
+<p class="h1">
+  Register
+</p>
+
+<div class="row">
+  <div class="col">
+    <form>
+      <p class="h5">
+        Player Name
+      </p>
+      <div class="form-group">
+        <input type="email" class="form-control" id="playerName" aria-describedby="emailHelp">
+      </div>
+
+      <p class="h5">
+        Division
+      </p>
+      <div class="form-group mb-5">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="divisionMen" value="men">
+          <label class="form-check-label" for="divisionMen"> Men </label>
+        </div>
+
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="divisionWomen" value="women">
+          <label class="form-check-label" for="divisionWomen"> Women </label>
+        </div>
+      </div>
+
+      <div class="border-bottom border-secondary mb-2">
+        <div class="h5 d-inline-block w-50">
+              Side Games
+        </div>
+        <div class="h5 d-inline-block w-50 text-right">
+            Cost
+        </div>
+      </div>
+      <div class="form-group mb-5">
+        <div class="form-check" *ngFor="let sideGame of sideGames">
+          <input class="form-check-input" type="checkbox" [value]="sideGame.value" id="{{sideGame.value}}Checkbox">
+          <label class="form-check-label" for="{{sideGame.value}}Checkbox">
+            {{ sideGame.label }}
+          </label>
+
+          <span class="float-right">
+            {{ sideGame.cost | currency:'$' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <p class="h3">
+          Registration Cost
+          <span class="float-right">
+            $5
+          </span>
+        </p>
+      </div>
+
+      <div class="form-group mb-5 border-top border-secondary pt-3">
+        <p class="h3">
+          Total Cost
+          <span class="float-right">
+            $15
+          </span>
+        </p>
+      </div>
+
+      <button type="submit" class="btn btn-block btn-lg btn-success">
+        Add Player
+      </button>
+    </form>
+  </div>
+</div>
