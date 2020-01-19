@@ -6,4 +6,6 @@ export interface Player {
   division: string;
   sideGames: SideGame[];
   totalCost?: number;
+  edit?: boolean;
+  addToBottom?: boolean;
 }

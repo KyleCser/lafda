@@ -2,6 +2,48 @@
   <ul *ngFor="let player of players">
     <li> {{ player | json }}</li>
   </ul>
+
+  <div class="card mb-2" *ngFor="let player of players; let index = index">
+    <div class="row m-2" *ngIf="!player.edit">
+      <div class="col-11 pr-0">
+        <div class="card-body pt-2 pl-0 pb-2">
+          <div class="card-text">
+            <h5 class="d-inline-block mr-3 mb-0">
+              {{ player.name | titlecase }}
+            </h5>
+            <span class="badge badge badge-primary mr-2 align-text-top" *ngFor="let game of player.sideGames">
+              {{ game.label }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-1 pl-0 pr-0">
+        <button (click)="player.edit = !player.edit" type="button" class="btn btn-outline-dark btn-sm float-right align-bottom">
+          Edit
+        </button>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="player.edit">
+      <div class="col-11 pr-0">
+        <div class="card-body pt-2 pl-0 pb-2">
+          <div class="form-group form-inline">
+            <input type="text" [(ngModel)]="player.name" class="form-control">
+            <span class="badge badge badge-primary mr-2 align-text-top" *ngFor="let game of player.sideGames">
+              {{ game.label }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-1 pl-0 pr-0">
+          <button (click)="player.edit = !player.edit" type="button" class="btn btn-outline-dark btn-sm float-right align-middle">
+            Edit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-container>
 
 <p class="h3 text-danger" *ngIf="players.length === 0">
