@@ -25,4 +25,12 @@ export class PlayerService {
   addPlayer(player: Player) {
     return this.http.post(this.baseURL + '/api/players', player, this.options);
   }
+
+  save(player: Player) {
+    return this.http.put(this.baseURL + '/api/players/' + player.id, player, this.options);
+  }
+
+  remove(player: Player) {
+    return this.http.put(this.baseURL + '/api/players/' + player.id, player, this.options);
+  }
 }

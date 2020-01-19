@@ -92,7 +92,16 @@ app.post('/api/players', function(req, res, next) {
 
 // update player
 app.put('/api/players/:id', function(req, res, next) {
+  const player = req.body;
 
+  rethink.table('players').get(req.params.id).update(player)
+    .run(conn, function(error, result) {
+      if (error) {
+        res.status(500).json(error);
+        next();
+      }
+      res.json(result);
+    });
 });
 
 // delete player

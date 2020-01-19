@@ -11,9 +11,11 @@
             <h5 class="d-inline-block mr-3 mb-0">
               {{ player.name | titlecase }}
             </h5>
-            <span class="badge badge badge-primary mr-2 align-text-top" *ngFor="let game of player.sideGames">
-              {{ game.label }}
-            </span>
+            <ng-container *ngFor="let game of player.sideGames">
+              <span class="badge badge badge-primary mr-2 align-text-top" *ngIf="game !== undefined && game.hasOwnProperty('checked') && game.checked">
+                {{ game.label }}
+              </span>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -25,22 +27,30 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="player.edit">
-      <div class="col-11 pr-0">
-        <div class="card-body pt-2 pl-0 pb-2">
+    <div class="row no-gutters shadow" *ngIf="player.edit">
+      <div class="col-10 pr-0">
+        <div class="card-body p-2">
           <div class="form-group form-inline">
-            <input type="text" [(ngModel)]="player.name" class="form-control">
-            <span class="badge badge badge-primary mr-2 align-text-top" *ngFor="let game of player.sideGames">
-              {{ game.label }}
-            </span>
+            <input type="text" class="form-control" [(ngModel)]="player.name">
+          </div>
+
+          <div class="form-check-inline" *ngFor="let sideGame of player.sideGames">
+            <input class="form-check-input" type="checkbox" id="{{player.id}}{{sideGame.value}}Checkbox" name="{{player.id}}{{sideGame.value}}Checkbox" [(ngModel)]="sideGame.checked">
+            <label class="form-check-label" for="{{player.id}}{{sideGame.value}}Checkbox">
+              {{ sideGame.label }}
+            </label>
           </div>
         </div>
+      </div>
 
-        <div class="col-1 pl-0 pr-0">
-          <button (click)="player.edit = !player.edit" type="button" class="btn btn-outline-dark btn-sm float-right align-middle">
-            Edit
-          </button>
-        </div>
+      <div class="col-2 mb-2">
+        <button (click)="save(player)" type="button" class="float-right mr-2 btn btn-outline-success btn-sm align-middle mt-2">
+          Save
+        </button>
+
+        <button (click)="remove(player)" type="button" class="float-right mr-2 btn btn-outline-danger btn-sm align-middle mt-4">
+          Remove
+        </button>
       </div>
     </div>
   </div>
