@@ -33,10 +33,13 @@ export class PlayerListComponent implements OnInit {
   ngOnInit() { }
 
   save(player: Player) {
+    player.edit = !player.edit;
     this.playerService.save(player)
       .subscribe((result: any) => {
         console.log(result);
-        player.edit = !player.edit;
+        if (result.replaced === 0) {
+          // todo : error handling
+        }
       });
   }
 

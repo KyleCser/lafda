@@ -31,6 +31,6 @@ export class PlayerService {
   }
 
   remove(player: Player) {
-    return this.http.put(this.baseURL + '/api/players/' + player.id, player, this.options);
+    return this.http.delete(this.baseURL + '/api/players/' + player.id, this.options);
   }
 }

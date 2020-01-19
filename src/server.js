@@ -3,8 +3,8 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const moment = require('moment');
 const cors = require('cors');
+const http = require('http');
 
 const PORT = process.env.PORT;
 
@@ -57,57 +57,9 @@ rethink.connect({db: 'lafda'}, (err, connection) => {
 //   res.sendfile('./dist/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 // });
 
-// return all players
-app.get('/api/players', function(req, res, next) {
-  rethink.table('players').run(conn, (error, cursor) => {
-    if (error) {
-      res.status(500).json(error);
-      next();
-    }
+const players = require('./routes/players');
 
-    if (cursor !== undefined) {
-      cursor.toArray(function (error, result) {
-        if (error) {
-          res.status(500).json(error);
-          next();
-        }
-        res.json(result);
-      });
-    }
-  });
-});
+app.use('/api/players', players);
 
-// create player
-app.post('/api/players', function(req, res, next) {
-  const player = req.body;
-
-  rethink.table('players').insert(player).run(conn, function(error, result) {
-    if (error) {
-      res.status(500).json(error);
-      next();
-    }
-    res.json(result);
-  });
-});
-
-// update player
-app.put('/api/players/:id', function(req, res, next) {
-  const player = req.body;
-
-  rethink.table('players').get(req.params.id).update(player)
-    .run(conn, function(error, result) {
-      if (error) {
-        res.status(500).json(error);
-        next();
-      }
-      res.json(result);
-    });
-});
-
-// delete player
-app.delete('/api/players/:id', function(req, res, next) {
-
-});
-
-app.listen(PORT);
-console.log(`listening on port ${PORT}`);
+const server = http.createServer(app);
+server.listen(PORT, () => console.log(`listening running on localhost:${PORT}`));
