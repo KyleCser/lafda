@@ -12,9 +12,10 @@ export class PlayerListComponent implements OnInit {
   players: Player[] = [];
   @Input() sideGames: SideGame[];
   @Input() playerList: Player[];
-  @Output() playerListChange = new EventEmitter<boolean>();
 
-  constructor(private playerService: PlayerService) {
+  constructor(private playerService: PlayerService) {}
+
+  ngOnInit() {
     this.playerService.getAllPlayers()
       .subscribe((listOfPlayers: Player[]) => {
         this.players = listOfPlayers.map((player: Player) => {
@@ -30,9 +31,14 @@ export class PlayerListComponent implements OnInit {
       }, (error) => {
         console.error(error);
       });
-  }
 
-  ngOnInit() { }
+    this.playerService.newPlayer
+      .subscribe((newPlayer: Player) => {
+        if (newPlayer !== undefined) {
+          this.players.push(newPlayer);
+        }
+      });
+  }
 
   save(player: Player) {
     player.edit = !player.edit;

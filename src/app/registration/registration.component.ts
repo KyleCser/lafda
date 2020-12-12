@@ -28,11 +28,10 @@ export class RegistrationComponent implements OnInit {
   addPlayer(player) {
     this.playerService.addPlayer(player)
       .subscribe((result: JSON) => {
-        if (result[`inserted`] === 1) {
-          player[`id`] = result[`generated_keys`][0];
-          this.playerListChange.emit(player);
+        if (result['success'] === true) {
+          this.playerService.addRegisteredPlayer(player);
         }
-      });
+      });;
   }
 
   addSideGame(game) {
