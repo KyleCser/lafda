@@ -27,10 +27,10 @@ export class PlayerService {
   }
 
   save(player: Player) {
-    return this.http.put(this.baseURL + '/api/players/' + player.id, player, this.options);
+    return this.http.put(this.baseURL + '/api/players/' + player['_id'], player, this.options);
   }
 
   remove(player: Player) {
-    return this.http.delete(this.baseURL + '/api/players/' + player.id, this.options);
+    return this.http.delete(this.baseURL + '/api/players/' + player['_id'], this.options);
   }
 }

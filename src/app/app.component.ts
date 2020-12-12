@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnChanges, SimpleChanges} from '@angular/core';
 import {SideGame} from './side-game';
+import {Player} from './player';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +8,7 @@ import {SideGame} from './side-game';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'lafda';
-
+  playerList: Player[] = [];
   sideGames: SideGame[] = [
     {
       label: '50/50 Throwdown',
@@ -26,4 +26,8 @@ export class AppComponent {
       cost: 5
     }
   ];
+
+  playerListChange(changes: Player) {
+    this.playerList.push(changes);
+  }
 }

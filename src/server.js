@@ -1,9 +1,9 @@
-const rethink = require('rethinkdb');
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const assert = require('assert');
 const http = require('http');
 
 const PORT = process.env.PORT;
@@ -20,7 +20,7 @@ var corsOptions = {
     }) || []).length > 0;
 
     // allow all for now
-    if (whiteListed) {
+    if (whiteListed || origin === undefined) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
@@ -31,31 +31,17 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({'extended':'true'}));
 
-let conn = null;
-rethink.connect({db: 'lafda'}, (err, connection) => {
-  if (err) return err;
+const MongoClient = require('mongodb').MongoClient;
 
-  conn = connection;
-
-  rethink.dbList().contains('lafda')
-    .do(databaseExists => {
-      return rethink.branch(
-        databaseExists,
-        { dbs_created: 0 },
-        rethink.dbCreate('lafda')
-      );
-    }).run(conn);
-
-  rethink.db('lafda').tableCreate('players').run(conn, (err, result) => {});
-  rethink.db('lafda').tableCreate('games').run(conn, (err, result) => {});
+// Use connect method to connect to the server
+MongoClient.connect('mongodb://localhost:27017', function (err, client) {
+  assert.equal(null, err);
+  let db = client.db('lafda');
+  app.locals.db = db;
 });
-
-// app.get('*', function(req, res) {
-//   res.sendfile('./dist/index.html'); // load the single view file (angular will handle the page changes on the front-end)
-// });
 
 const players = require('./routes/players');
 

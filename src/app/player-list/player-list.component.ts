@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PlayerService} from '../player.service';
 import {Player} from '../player';
 import {SideGame} from '../side-game';
@@ -11,6 +11,8 @@ import {SideGame} from '../side-game';
 export class PlayerListComponent implements OnInit {
   players: Player[] = [];
   @Input() sideGames: SideGame[];
+  @Input() playerList: Player[];
+  @Output() playerListChange = new EventEmitter<boolean>();
 
   constructor(private playerService: PlayerService) {
     this.playerService.getAllPlayers()
@@ -48,7 +50,7 @@ export class PlayerListComponent implements OnInit {
       .subscribe((result: any) => {
         console.log(result);
         this.players = this.players.filter((match: Player) => {
-          return player.id !== match.id;
+          return player['_id'] !== match['_id'];
         });
       });
   }

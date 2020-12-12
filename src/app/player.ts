@@ -1,6 +1,7 @@
 import {SideGame} from './side-game';
 
 export interface Player {
+  number?: number;
   id?: string;
   name: string;
   division: string;

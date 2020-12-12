@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'lafda',
-      script: './server.js',
+      script: 'src/server.js',
       watch: ['./'],
       env: {
         NODE_ENV: 'local',

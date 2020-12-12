@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Player} from '../player';
 import {SideGame} from '../side-game';
 import {PlayerService} from '../player.service';
@@ -18,6 +18,8 @@ export class RegistrationComponent implements OnInit {
     totalCost: 5
   };
   @Input() sideGames: SideGame[];
+  @Input() playerList;
+  @Output() playerListChange = new EventEmitter<boolean>();
 
   ngOnInit() { }
 
@@ -28,6 +30,7 @@ export class RegistrationComponent implements OnInit {
       .subscribe((result: JSON) => {
         if (result[`inserted`] === 1) {
           player[`id`] = result[`generated_keys`][0];
+          this.playerListChange.emit(player);
         }
       });
   }
@@ -43,5 +46,4 @@ export class RegistrationComponent implements OnInit {
      });
     }
   }
-
 }

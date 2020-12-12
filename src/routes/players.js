@@ -1,69 +1,42 @@
-const router = require('express').Router();
-const rethink = require('rethinkdb');
+const { ObjectID } = require('mongodb');
 
-let conn = null;
-rethink.connect({db: 'lafda'}, (err, connection) => {
-  if (err) return err;
-  conn = connection;
-});
+const router = require('express').Router();
 
 // return all players
-router.get('/', function(req, res, next) {
-  rethink.table('players').run(conn, (error, cursor) => {
-    if (error) {
-      res.status(500).json(error);
-      next();
-    }
-
-    if (cursor !== undefined) {
-      cursor.toArray(function (error, result) {
-        if (error) {
-          res.status(500).json(error);
-          next();
-        }
-        res.json(result);
-      });
-    }
-  });
+router.get('/', async function(req, res, next) {
+  const db = req.app.locals.db;
+  const players = db.collection("players");
+  res.send(await players.find().toArray());
 });
 
 // create player
-router.post('/', function(req, res, next) {
+router.post('/', async function(req, res, next) {
+  const db = req.app.locals.db;
+  const players = db.collection("players");
   const player = req.body;
-
-  rethink.table('players').insert(player).run(conn, function(error, result) {
-    if (error) {
-      res.status(500).json(error);
-      next();
-    }
-    res.json(result);
-  });
+  
+  const insertResult = await players.insertOne(player);
+  res.json({ success: insertResult.insertedCount === 1, ...player });
 });
 
 // update player
-router.put('/:id', function(req, res, next) {
+router.put('/:id', async function(req, res, next) {
+  const db = req.app.locals.db;
+  const players = db.collection("players");
   const player = req.body;
+  delete player['_id'];
 
-  rethink.table('players').get(req.params.id).update(player)
-    .run(conn, function(error, result) {
-      if (error) {
-        res.status(500).json(error);
-        next();
-      }
-      res.json(result);
-    });
+  const updateResult = await players.update({ '_id': ObjectID(req.params.id) }, player);
+  res.json({ success: updateResult.upsertedCount === 1 || updateResult.modifiedCount === 1 });
 });
 
 // delete player
-router.delete('/:id', function(req, res, next) {
-  rethink.table('players').get(req.params.id).delete()
-    .run(conn, function(error, result) {
-      if (error) {
-        res.status(500).json(error);
-        next();
-      }
-      res.json(result);
-    });
+router.delete('/:id', async function(req, res, next) {
+  const db = req.app.locals.db;
+  const players = db.collection("players");
+
+  const deleteResult = await players.deleteOne({_id: ObjectID(req.params.id)});
+  res.json({ success: deleteResult.deletedCount === 1 });
 });
 
 module.exports = router;
